@@ -1,0 +1,33 @@
+import java.awt.Dimension;
+import java.awt.Image;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
+import java.awt.BorderLayout;
+
+public class info extends JPanel{
+	public info() {
+		setLayout(null);
+		ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource("imagenes/info.png"));
+        Image img = icon.getImage();
+        Image newImg = img.getScaledInstance(400, 640, Image.SCALE_SMOOTH);
+        ImageIcon newImc = new ImageIcon(newImg);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(10, 11, 430, 542);
+		panel.setLayout(new BorderLayout(0, 0));
+		
+		JLabel label = new JLabel(newImc);
+		panel.add(label);
+		
+		int height= 300;
+		int width = 450;
+		JScrollPane scrollPane = new JScrollPane(panel);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setBounds(0, 0, width, height);
+		scrollPane.setPreferredSize(new Dimension(width, height));
+		add(scrollPane);
+	}
+}

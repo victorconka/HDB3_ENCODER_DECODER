@@ -1,0 +1,408 @@
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JFileChooser;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import java.awt.Color;
+import java.awt.Font;
+import javax.swing.JTabbedPane;
+
+
+public class HDB3 {
+
+	private JFrame frmHdbEncoderdecoder;
+	private JFileChooser fileChooser;
+	private File selectedFile;
+	private JLabel archivoSeleccionadoLbl;
+	private ArrayList<String> file = new ArrayList<String>();
+	private ArrayList<String> fileBin = new ArrayList<String>();
+	private ArrayList<String> fileAmi = new ArrayList<String>();
+	private ArrayList<String> fileHdb3 = new ArrayList<String>();
+	private ArrayList<String> hdb3Tipo = new ArrayList<String>();
+	private JTextField codeLbl;
+	private JTextArea textArea;
+	private JTextArea binTA;
+	private JTextArea amiTA;
+	private JTextArea hdb3TA;
+	private JTextArea hdb3TipoTA;
+	private JTextArea info2TA;
+	
+	
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					HDB3 window = new HDB3();
+					window.frmHdbEncoderdecoder.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public HDB3() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frmHdbEncoderdecoder = new JFrame();
+		frmHdbEncoderdecoder.setTitle("HDB3 ENCODER/DECODER");
+		frmHdbEncoderdecoder.setBounds(100, 100, 493, 383);
+		frmHdbEncoderdecoder.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmHdbEncoderdecoder.getContentPane().setLayout(null);
+		
+		//Create a new instance ofJFileChooser class:
+		fileChooser = new JFileChooser();
+		//Set current directory
+		fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));	
+		
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setBounds(10, 11, 450, 322);
+		frmHdbEncoderdecoder.getContentPane().add(tabbedPane);
+		
+		JPanel panel = new JPanel();
+		tabbedPane.addTab("Program", null, panel, null);
+		panel.setLayout(null);
+		
+		
+		JButton selFile = new JButton("Seleccionar");
+		selFile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int result = fileChooser.showOpenDialog(frmHdbEncoderdecoder);
+				if (result == JFileChooser.APPROVE_OPTION) {
+					//Show up the dialog:
+				    selectedFile = fileChooser.getSelectedFile();
+				    archivoSeleccionadoLbl.setText("Archivo seleccionado: " + selectedFile.getAbsolutePath());
+				    processFile();
+				    
+				}
+			}
+		});
+		selFile.setBounds(283, 7, 113, 23);
+		panel.add(selFile);
+		
+		JLabel selectLbl = new JLabel("Seleccione un archivo a procesar");
+		selectLbl.setBounds(10, 9, 196, 19);
+		panel.add(selectLbl);
+		
+		archivoSeleccionadoLbl = new JLabel("Archivo seleccionado:");
+		archivoSeleccionadoLbl.setBounds(10, 39, 386, 19);
+		panel.add(archivoSeleccionadoLbl);
+		
+		JLabel lblCodificacin = new JLabel("Codificaci\u00F3n:");
+		lblCodificacin.setBounds(10, 69, 100, 14);
+		panel.add(lblCodificacin);
+		
+		JLabel lblArchivosGenerados = new JLabel("Archivos Generados:");
+		lblArchivosGenerados.setBounds(10, 94, 129, 14);
+		panel.add(lblArchivosGenerados);
+		
+		textArea = new JTextArea();
+		textArea.setLineWrap(true);
+		textArea.setFont(textArea.getFont().deriveFont(textArea.getFont().getStyle() | Font.BOLD));
+		textArea.setForeground(Color.BLACK);
+		textArea.setEditable(false);
+		textArea.setBounds(10, 119, 386, 164);
+		panel.add(textArea);
+		
+		codeLbl = new JTextField();
+		codeLbl.setForeground(Color.BLACK);
+		codeLbl.setEditable(false);
+		codeLbl.setBounds(120, 69, 276, 20);
+		panel.add(codeLbl);
+		codeLbl.setColumns(10);
+		
+		Info info = new Info();
+		tabbedPane.addTab("info", null, info, null);
+		
+		binTA = new JTextArea();
+		binTA.setLineWrap(true);
+		amiTA = new JTextArea();
+		amiTA.setLineWrap(true);
+		hdb3TA = new JTextArea();
+		hdb3TA.setLineWrap(true);
+		hdb3TipoTA = new JTextArea();
+		hdb3TipoTA.setLineWrap(true);
+		info2TA = new JTextArea();
+		info2TA.setLineWrap(true);
+		tabbedPane.addTab("Info2", null, info2TA, null);
+		tabbedPane.setEnabledAt(2, false);
+		tabbedPane.addTab("BIN", null, binTA, null);
+		tabbedPane.addTab("AMI", null, amiTA, null);
+		tabbedPane.addTab("HDB3", null, hdb3TA, null);
+		tabbedPane.addTab("HDB3-Tipo", null, hdb3TipoTA, null);
+		
+	}
+	private void processFile() {
+		if(selectedFile.getAbsolutePath().contains(".txt")){
+
+			readFile();
+			codeLbl.setText("");
+			textArea.setText("");
+			
+			
+			if(file.get(0).contains("bin")){
+				this.codeLbl.setText("binary file");
+				fileBin = file;
+				binToHdb3();
+				setTextTA();
+			}else
+				if(file.get(0).contains("hdb3")){
+					this.codeLbl.setText("hdb3 encoding");
+					fileHdb3 = file;
+					hdb3ToBin();
+					setTextTA();
+			}else if(file.get(0).contains("ami")){
+				this.codeLbl.setText("ami encoding");
+				fileAmi = file;
+				amiToBin();
+				writeFile(fileBin);
+				amiToHdb3();
+				writeFile(fileHdb3);
+				writeFile(hdb3Tipo);
+				setTextTA();
+			}
+		    
+		}else{
+			this.codeLbl.setText("extension incorrecta");
+		}
+		
+	}
+	private void setTextTA(){
+		binTA.setText("");
+		amiTA.setText("");
+		hdb3TA.setText("");
+		hdb3TipoTA.setText("");
+		binTA.setText(this.fileBin.toString());
+		amiTA.setText(this.fileAmi.toString());
+		hdb3TA.setText(this.fileHdb3.toString() + "\n" + this.hdb3Tipo.toString());
+		hdb3TipoTA.setText(this.hdb3Tipo.toString());
+	}
+	private void readFile(){
+		Scanner s;
+		try {
+			s = new Scanner(this.selectedFile);
+			file = new ArrayList<String>();
+			while (s.hasNext()){
+			    file.add(s.next());
+			}
+			s.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}	
+	}
+	
+	private void writeFile(ArrayList<String> arr){
+		FileWriter writer;
+		String destino = selectedFile.getAbsolutePath().replaceAll(".txt", "");
+		destino += arr.get(0) + ".txt";
+		
+		try {
+			writer = new FileWriter(destino);
+			for(String str: arr) {
+				writer.write(str + "\n");
+			}
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		textArea.setText(textArea.getText() + "\n" + destino);
+
+	}
+	private void hdb3ToBin() {
+		hdb3ToAmi();
+		amiToBin();	
+		writeFile(fileAmi);
+		writeFile(fileBin);
+	}
+
+	private void binToHdb3(){
+		binToAmi();
+		writeFile(fileAmi);
+		amiToHdb3();
+		writeFile(fileHdb3);
+		writeFile(hdb3Tipo);
+
+	}
+	
+	private void binToAmi() {
+		boolean b = true;
+		fileAmi.clear();
+		fileAmi.add("ami");
+		for(String s : fileBin){
+			if(s.contains("0")){
+				fileAmi.add(s);
+			}else if(s.contains("1")){
+				if(b){
+					fileAmi.add("+");
+					b = false;
+				}else{
+					fileAmi.add("-");
+					b = true;
+				}
+			}//else nada
+		}
+		
+	}
+
+	private void amiToBin() {
+		fileBin.clear();
+		fileBin.add("bin");
+		for(String s : fileAmi){
+			if(s.contains("+") || s.contains("-")){
+				fileBin.add("1");
+			}else if(s.contains("0")){
+				fileBin.add("0");
+			}
+		}
+	}
+	
+	private void amiToHdb3() {
+		int zCont = 0; //contador de ceros
+		int fCont = 0; //contador de flancos
+		int ppCont = 0; //contador de 1+ desde la ultima violacion
+		int pnCont = 0; //contador de 1- desde la ultima violacion
+		String s = "";
+		String p = "";//simbolo precedente
+		
+		this.fileHdb3.clear();
+		this.fileHdb3.add("hdb3");
+		this.hdb3Tipo.clear();
+		this.hdb3Tipo.add("Tipo");
+		
+		for(int i = 1; i < fileAmi.size(); i++){ 
+			s = fileAmi.get(i);
+			this.fileHdb3.add(s);
+			this.hdb3Tipo.add(s);
+			//contar
+			if(s.contains("0")){
+				zCont++;			
+				if(zCont == 4){
+					if(fCont%2 == 0){
+						if(p.contains("+")){
+							this.fileHdb3.set(i,"-");					
+							this.fileHdb3.set(i-3, "-");						
+						}else{
+							this.fileHdb3.set(i,"+");
+							this.fileHdb3.set(i-3, "+");
+						}
+						//tipo de violacion
+						this.hdb3Tipo.set(i,"V");
+						this.hdb3Tipo.set(i-3, "B");
+					}else{
+						this.fileHdb3.set(i,p);//valor del flanco previo
+						this.hdb3Tipo.set(i,"V");
+					}
+					fCont = 0;
+					zCont = 0;
+				}
+				
+			}else if(s.contains("+")){
+				p = s;
+				zCont = 0;
+				fCont++;
+				ppCont++;
+			}else if(s.contains("-")){
+				p = s;
+				zCont = 0;
+				fCont++;
+				pnCont++;
+			}else{
+				System.out.println("Signo incorrecto");
+			}
+			
+
+			System.out.println(s + " - " + fileHdb3.get(i) + " - zCont: "+ zCont);
+		}
+	}
+	
+	private void hdb3ToAmi() {
+		fileAmi.clear();
+		fileAmi.add("ami");
+		String s,a,b,c,d;
+		String p = "+";
+		
+		for(int i = 1; i < fileHdb3.size(); i++){
+			s = fileHdb3.get(i);
+			if( i-3 > 0 ){//verificamos que i, i+1, i+2. i+3 estan contenidos en array
+				a = fileHdb3.get(i-3);
+				b = fileHdb3.get(i-2);
+				c = fileHdb3.get(i-1);
+				d = fileHdb3.get(i);
+				
+				if(patternA(a,b,c,d)){
+					if(p.contains("+")){
+						fileAmi.add("0");
+					}else{
+						fileAmi.add("0");
+					}
+				}else if(patternB(a,b,c,d)){
+					if(p.contains("+")){
+						fileAmi.add("0");
+						fileAmi.set(i-3, "0");
+					}else{
+						fileAmi.add("0");
+						fileAmi.set(i-3, "0");
+					}
+				}else{
+					fileAmi.add(s);
+					p = s;
+				}
+			}else{
+				fileAmi.add(s);
+				if(!s.contains("0")){
+					p = s;
+				}
+			}
+		}
+	}
+
+	private boolean patternA(String a, String b, String c, String d) {//000V
+		if(a.contains("0")){
+			if(b.contains("0")){
+				if(c.contains("0")){
+					if(!d.contains("0")){
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	private boolean patternB(String a, String b, String c, String d) {//B00V
+		if(!a.contains("0")){
+			if(b.contains("0")){
+				if(c.contains("0")){
+					if(!d.contains("0")){
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+}

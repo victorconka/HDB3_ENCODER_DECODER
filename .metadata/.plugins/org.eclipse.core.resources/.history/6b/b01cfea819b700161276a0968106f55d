@@ -1,0 +1,34 @@
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextPane;
+
+public class info extends JPanel{
+	public info() {
+		setLayout(null);
+		
+		JTextPane txtpnHighDensityBipolar = new JTextPane();
+		txtpnHighDensityBipolar.setText("High Density Bipolar-3 Zeros\r\nFormato de archivos:\r\n{   \r\ntipo\\n\t\tbin/ami/hdb3\r\ndato\\n\t\t1,0/0,+,-/0,+,-\r\ndato\\n\t\t1,0/0,+,-/0,+,-\r\n}\r\n");
+		txtpnHighDensityBipolar.setBounds(10, 5, 430, 118);
+		add(txtpnHighDensityBipolar);
+		
+		JLabel image = new JLabel();
+		image.setLocation(10, 125);
+		image.setSize(430, 300);
+		ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource("/imagenes/data-communications-4-1-68-638.jpg"));
+        Image img = icon.getImage();
+        Image newImg = img.getScaledInstance(430, 300, Image.SCALE_SMOOTH);
+        ImageIcon newImc = new ImageIcon(newImg);
+        image.setIcon(newImc);
+		
+		//JLabel image = new JLabel(new ImageIcon(info.class.getResource("/imagenes/data-communications-4-1-68-638.jpg")));
+		this.add(image);
+	}
+
+}
