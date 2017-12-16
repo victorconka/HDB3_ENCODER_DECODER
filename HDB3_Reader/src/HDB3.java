@@ -41,8 +41,8 @@ public class HDB3 {
 	private JTextArea txtrHdbeuropeanEcarrier;
 	private JScrollPane formatSP;
 	private JTextArea formatoTA;
-	
-	
+
+
 	/**
 	 * Launch the application.
 	 */
@@ -77,21 +77,21 @@ public class HDB3 {
 		creditsSP.setBounds(100, 100, 500, 383);
 		creditsSP.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		creditsSP.getContentPane().setLayout(null);
-		
+
 		//Create a new instance ofJFileChooser class:
 		fileChooser = new JFileChooser();
 		//Set current directory
-		fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));	
-		
+		fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(10, 11, 469, 322);
 		creditsSP.getContentPane().add(tabbedPane);
-		
+
 		JPanel panel = new JPanel();
 		tabbedPane.addTab("Program", null, panel, null);
 		panel.setLayout(null);
-		
-		
+
+
 		JButton selFile = new JButton("Seleccionar");
 		selFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -101,29 +101,29 @@ public class HDB3 {
 				    selectedFile = fileChooser.getSelectedFile();
 				    archivoSeleccionadoLbl.setText("Archivo seleccionado: " + selectedFile.getAbsolutePath());
 				    processFile();
-				    
+
 				}
 			}
 		});
 		selFile.setBounds(216, 7, 113, 23);
 		panel.add(selFile);
-		
+
 		JLabel selectLbl = new JLabel("Seleccione un archivo a procesar");
 		selectLbl.setBounds(10, 9, 196, 19);
 		panel.add(selectLbl);
-		
+
 		archivoSeleccionadoLbl = new JLabel("Archivo seleccionado:");
 		archivoSeleccionadoLbl.setBounds(10, 39, 386, 19);
 		panel.add(archivoSeleccionadoLbl);
-		
+
 		JLabel lblCodificacin = new JLabel("Codificaci\u00F3n:");
 		lblCodificacin.setBounds(10, 69, 100, 14);
 		panel.add(lblCodificacin);
-		
+
 		JLabel lblArchivosGenerados = new JLabel("Archivos Generados:");
 		lblArchivosGenerados.setBounds(10, 94, 129, 14);
 		panel.add(lblArchivosGenerados);
-		
+
 		textArea = new JTextArea();
 		textArea.setLineWrap(true);
 		textArea.setFont(textArea.getFont().deriveFont(textArea.getFont().getStyle() | Font.BOLD));
@@ -131,14 +131,14 @@ public class HDB3 {
 		textArea.setEditable(false);
 		textArea.setBounds(10, 119, 444, 164);
 		panel.add(textArea);
-		
+
 		codeLbl = new JTextField();
 		codeLbl.setForeground(Color.BLACK);
 		codeLbl.setEditable(false);
 		codeLbl.setBounds(120, 69, 334, 20);
 		panel.add(codeLbl);
 		codeLbl.setColumns(10);
-		
+
 		binTA = new JTextArea();
 		binTA.setLineWrap(true);
 		amiTA = new JTextArea();
@@ -151,16 +151,16 @@ public class HDB3 {
 		tabbedPane.addTab("AMI", null, amiTA, null);
 		tabbedPane.addTab("HDB3", null, hdb3TA, null);
 		tabbedPane.addTab("HDB3-Tipo", null, hdb3TipoTA, null);
-		
+
 		formatSP = new JScrollPane();
 		tabbedPane.addTab("Formato", null, formatSP, null);
-		
+
 		formatoTA = new JTextArea();
 		formatoTA.setLineWrap(true);
 		formatoTA.setFont(new Font("Monospaced", Font.PLAIN, 11));
 		formatoTA.setText("Formato de Archivos Admisibles:\r\n-----------------------------------\r\nExtension: .txt\r\nCabecera: bin,ami,hdb3\r\nDato\r\nDato\r\nDato\r\n------------------------------------\r\nEjemplo: test.txt\r\nbin\r\n1\r\n0\r\n1\r\n0\r\n1\r\n0\r\n0\r\n0\r\n0\r\n1\r\n------------------------------------\r\nComo resultado se generaran 4 archivos. hdb3 va acompa\u00F1ado de una replica\r\ncon una representaci\u00F3n alternativa. Tambien se genera un archivo donde se comparan \r\ntodas las salidas entre si.\r\n\r\nPara cualquier sugerencia o bug contactar con:\r\nViktor\r\ns_vicuk@hotmail.com");
 		formatSP.setViewportView(formatoTA);
-		
+
 		JScrollPane infoSP = new JScrollPane();
 		tabbedPane.addTab("Info", null, infoSP, null);
 		txtrHdbeuropeanEcarrier = new JTextArea();
@@ -169,7 +169,7 @@ public class HDB3 {
 		txtrHdbeuropeanEcarrier.setEditable(false);
 		txtrHdbeuropeanEcarrier.setText("HDB3 (European E-carrier)\r\n\r\nUsed in all levels of the European E-carrier system, the high density bipolar of order 3 (HDB3) code replaces any instance of 4 consecutive 0 bits with one of the patterns \"000V\" or \"B00V\". The choice is made to ensure that consecutive violations are of differing polarity, i.e. separated by an odd number of normal + or - marks. \r\n+--------------------+---------+---------------+-------+\r\n| Number of +/- bits | Pattern | Polarity      | Coded |\r\n| since last V       |         | of last Pulse |       |\r\n| odd                | 000V    | +             | 000+  |\r\n|                    |         | \u2212             | 000\u2212  |\r\n| even               | B00V    | +             | \u221200\u2212  |\r\n|                    |         | \u2212             | +00+  |\r\n+--------------------+---------+---------------+-------+\r\nThese rules are applied on the code as it is being built from the original string. Everytime there are 4 consecutive zeros in the code they will be replaced by either 000\u2212, 000+, +00+ or \u221200\u2212. To determine which pattern to use, you have to count the number of pluses (+) and the number of minuses (\u2212) since the last violation bit V that you used and subtract one from the other. If the result is an odd number then 000\u2212 or 000+ is used. If the result is an even number then +00+ or \u221200\u2212 is used. To determine which polarity to use you must look at the pulse preceding the four zeros. If 000V form must be used then V simply copies the polarity of last pulse, if B00V form must be used then B and V chosen will have the opposite polarity of the last pulse.\r\n\r\nSummary of HDB3 encoding rules\r\n\r\nTransmitted Data \t HDB3 Encoded Pattern\r\n0 \t0\r\n1 \tAlternate Mark Inversion (AMI)\r\n0000 \t 000V (three 0's and a violation)\r\n0000 0000 \t B00V B00V\r\n");
 		infoSP.setViewportView(txtrHdbeuropeanEcarrier);
-		
+
 	}
 	private void processFile() {
 		if(selectedFile.getAbsolutePath().contains(".txt")){
@@ -177,14 +177,14 @@ public class HDB3 {
 			readFile();
 			codeLbl.setText("");
 			textArea.setText("");
-			
-			
+
+
 			if(file.get(0).contains("bin")){
 				this.codeLbl.setText("binary file");
 				fileBin = file;
 				binToHdb3();
 				setTextTA();
-				
+
 				writeCompareFile();
 			}else
 				if(file.get(0).contains("hdb3")){
@@ -192,7 +192,7 @@ public class HDB3 {
 					fileHdb3 = file;
 					hdb3ToBin();
 					setTextTA();
-					
+
 					writeCompareFile();
 			}else if(file.get(0).contains("ami")){
 				this.codeLbl.setText("ami encoding");
@@ -203,16 +203,16 @@ public class HDB3 {
 				writeFile(fileHdb3);
 				writeFile(hdb3Tipo);
 				setTextTA();
-				
+
 				writeCompareFile();
 			}
-		    
+
 		}else{
 			this.codeLbl.setText("extension incorrecta");
 		}
-		
+
 	}
-	
+
 	/**
 	 * Creates a file that compares outputs
 	 */
@@ -220,35 +220,35 @@ public class HDB3 {
 		FileWriter writer;
 		String destino = selectedFile.getAbsolutePath().replaceAll(".txt", "");
 		destino += "Compare" + ".txt";
-		
+
 		try {
 			writer = new FileWriter(destino);
-			
+
 			this.fileBin.remove(0);
 			writer.write(this.fileBin.toString() + " BINARY \n");
 			this.fileBin.clear();
-			
+
 			this.fileAmi.remove(0);
 			writer.write(this.fileAmi.toString() + " AMI \n");
 			this.fileAmi.clear();
-			
+
 			this.fileHdb3.remove(0);
 			writer.write(this.fileHdb3.toString() + " HDB3 \n");
 			this.fileHdb3.clear();
-			
+
 			this.hdb3Tipo.remove(0);
 			writer.write(this.hdb3Tipo.toString() + " HDB3 \n");
 			this.hdb3Tipo.clear();
-			
+
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		textArea.setText(textArea.getText() + "\n" + destino);
-		
+
 	}
-	
+
 	/**
 	 * Set text of GUI Text Areas
 	 */
@@ -262,7 +262,7 @@ public class HDB3 {
 		hdb3TA.setText(this.fileHdb3.toString() + "\n" + this.hdb3Tipo.toString());
 		hdb3TipoTA.setText(this.hdb3Tipo.toString());
 	}
-	
+
 	private void readFile(){
 		Scanner s;
 		try {
@@ -274,14 +274,14 @@ public class HDB3 {
 			s.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		}	
+		}
 	}
-	
+
 	private void writeFile(ArrayList<String> arr){
 		FileWriter writer;
 		String destino = selectedFile.getAbsolutePath().replaceAll(".txt", "");
 		destino += arr.get(0) + ".txt";
-		
+
 		try {
 			writer = new FileWriter(destino);
 			for(String str: arr) {
@@ -291,13 +291,13 @@ public class HDB3 {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		textArea.setText(textArea.getText() + "\n" + destino);
 
 	}
 	private void hdb3ToBin() {
 		hdb3ToAmi();
-		amiToBin();	
+		amiToBin();
 		writeFile(fileAmi);
 		writeFile(fileBin);
 	}
@@ -310,7 +310,7 @@ public class HDB3 {
 		writeFile(hdb3Tipo);
 
 	}
-	
+
 	private void binToAmi() {
 		boolean b = true;
 		fileAmi.clear();
@@ -328,7 +328,7 @@ public class HDB3 {
 				}
 			}//else nada
 		}
-		
+
 	}
 
 	private void amiToBin() {
@@ -342,30 +342,93 @@ public class HDB3 {
 			}
 		}
 	}
-	
+
 	private void amiToHdb3() {
+		String currSymbol =""; 	//current symbol
+		String lastPulse =""; 	//polarity of last pulse
+		int nSub = 0;  			//total number of substitutions
+		int zCont = 0; 			//number of 0's since last symbol
+		int pCont = 0; 			//number of pulses since last substitution
+
+		this.fileHdb3.clear();		//empty list
+		this.fileHdb3.add("hdb3"); 	//simple hdb3
+		this.hdb3Tipo.clear();		//empty list
+		this.hdb3Tipo.add("Tipo "); 	//hdb3 with type of substitution
+
+		for(int i = 1; i < fileAmi.size(); i++){
+			currSymbol = fileAmi.get(i);
+			this.fileHdb3.add(currSymbol);
+			this.hdb3Tipo.add(currSymbol);
+			if(currSymbol.contains("0")){
+				zCont++;
+				if(zCont == 4){
+					//substitution must be made
+					if(nSub == 0){//first substitution 000V
+						this.hdb3Tipo.set(i,"v");
+						this.fileHdb3.set(i,lastPulse);
+					}else{
+						if(pCont%2 != 0){//odd -> 000V
+							this.hdb3Tipo.set(i,"v");
+							this.fileHdb3.set(i,lastPulse);
+						}else{//even -> B00V
+							if(lastPulse.contains("+")){
+								this.fileHdb3.set(i,"-");
+								this.fileHdb3.set(i-3, "-");
+							}else{
+								this.fileHdb3.set(i,"+");
+								this.fileHdb3.set(i-3, "+");
+							}
+							this.hdb3Tipo.set(i,"v");
+							this.hdb3Tipo.set(i-3, "b");
+						}
+					}
+					lastPulse = this.fileHdb3.get(i);
+					zCont = 0;
+					pCont=0;
+					nSub++;
+				}
+			}else if(currSymbol.contains("+")){
+
+				pCont++;
+				zCont = 0;
+				lastPulse = currSymbol;
+
+			}else if(currSymbol.contains("-")){
+
+				pCont++;
+				zCont = 0;
+				lastPulse = currSymbol;
+
+			}else{
+				System.out.println("Signo incorrecto");
+			}
+
+		}
+
+
+		/*
 		int zCont = 0; //contador de ceros
-		int fCont = 0; //contador de flancos
+		int fCont = 0; //contador de flancos/pulsos
 		String s = "";
 		String p = "";//simbolo precedente
-		
+
 		this.fileHdb3.clear();
 		this.fileHdb3.add("hdb3");
 		this.hdb3Tipo.clear();
 		this.hdb3Tipo.add("Tipo");
-		
-		for(int i = 1; i < fileAmi.size(); i++){ 
+
+		for(int i = 1; i < fileAmi.size(); i++){
 			s = fileAmi.get(i);
 			this.fileHdb3.add(s);
 			this.hdb3Tipo.add(s);
 			//contar
 			if(s.contains("0")){
-				zCont++;			
+				zCont++;
 				if(zCont == 4){
 					if(fCont%2 == 0){
 						if(p.contains("+")){
-							this.fileHdb3.set(i,"-");					
-							this.fileHdb3.set(i-3, "-");						
+							this.fileHdb3.set(i,"-");
+							this.fileHdb3.set(i-3, "-");
 						}else{
 							this.fileHdb3.set(i,"+");
 							this.fileHdb3.set(i-3, "+");
@@ -380,7 +443,7 @@ public class HDB3 {
 					fCont = 0;
 					zCont = 0;
 				}
-				
+
 			}else if(s.contains("+")){
 				p = s;
 				zCont = 0;
@@ -392,18 +455,18 @@ public class HDB3 {
 			}else{
 				System.out.println("Signo incorrecto");
 			}
-			
+
 
 			//System.out.println(s + " - " + fileHdb3.get(i) + " - zCont: "+ zCont);
-		}
+		*/
 	}
-	
+
 	private void hdb3ToAmi() {
 		fileAmi.clear();
 		fileAmi.add("ami");
 		String s,a,b,c,d;
 		String p = "+";
-		
+
 		for(int i = 1; i < fileHdb3.size(); i++){
 			s = fileHdb3.get(i);
 			if( i-3 > 0 ){//verificamos que i, i+1, i+2. i+3 estan contenidos en array
@@ -411,7 +474,7 @@ public class HDB3 {
 				b = fileHdb3.get(i-2);
 				c = fileHdb3.get(i-1);
 				d = fileHdb3.get(i);
-				
+
 				if(patternA(a,b,c,d)){
 					if(p.contains("+")){
 						fileAmi.add("0");
@@ -451,7 +514,7 @@ public class HDB3 {
 		}
 		return false;
 	}
-	
+
 	private boolean patternB(String a, String b, String c, String d) {//B00V
 		if(!a.contains("0")){
 			if(b.contains("0")){
